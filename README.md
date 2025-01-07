@@ -46,7 +46,7 @@ In my testing, I used `mysql` as storage backend.
 ### Creating an account
 Head to `/register` and register an account. You can now fill in the contact form.
 
-### Creating an account
+### Creating an admin account
 Get into the Docker shell/shell, run this command below. This will generate a random password for admin.
 ```
 node utils/createAdmin.js
