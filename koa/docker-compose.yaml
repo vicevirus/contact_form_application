@@ -1,0 +1,59 @@
+# change stuff as needed. esp creds.
+services:
+  app:
+    build:
+      context: .
+    container_name: koa_app
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: user
+      DB_PASSWORD: user
+      DB_NAME: koa
+      SECRET_KEY: changemeplease
+    networks:
+      - koa_network
+
+  db:
+    image: mysql:8.0
+    container_name: koa_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: koa
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    volumes:
+      - koa_db_data:/var/lib/mysql
+    networks:
+      - koa_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:latest
+    container_name: webserver
+    ports:
+      - "127.0.0.1:7000:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - koa_network
+
+volumes:
+  koa_db_data:
+
+networks:
+  koa_network:
+    driver: bridge

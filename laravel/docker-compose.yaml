@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: laravel_app
+    working_dir: /var/www
+    volumes:
+      - ./app:/var/www
+    environment:
+      - PHP_FPM_INSTALL_TOKENIZER=true
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - laravel_network
+
+  webserver:
+    image: nginx:latest
+    container_name: laravel_webserver
+    ports:
+       - "127.0.0.1:8000:80"
+    volumes:
+      - ./app:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - laravel_network
+
+# remember to change the creds if you are pushing to prod.
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:
+
+networks:
+  laravel_network:
+    driver: bridge

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+    <h1 class="text-2xl font-bold mb-6 text-center">Welcome, Admin <%= user.username %>!</h1>
+    <div class="flex justify-center space-x-4 mt-6">
+      <a href="/admin/contacts" 
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        View Contacts
+      </a>
+      <a href="/logout" 
+        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+        Logout
+      </a>
+    </div>
+  </div>
+</body>
+</html>
